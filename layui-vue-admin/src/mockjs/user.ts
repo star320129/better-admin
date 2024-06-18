@@ -263,15 +263,13 @@ const getInfo = (req: any, res: any) => {
   let item = JSON.parse(req.body);
   let token = item ? item.token : null;
   let result: Result = {
-    code: 200,
-    msg: "操作成功",
-    data: user,
-    success: true
+    status: 200,
+    message: "操作成功",
+    result: user,
   }
   if (item || token) {
-    result.code = 99998;
-    result.msg = "请重新登录";
-    result.success = false;
+    result.status = 99998;
+    result.message = "请重新登录";
   }
   return result;
 }
@@ -280,15 +278,13 @@ const getPermission = (req: any, res: any) => {
   let item = JSON.parse(req.body);
   let token = item ? item.token : null;
   let result: Result = {
-    code: 200,
-    msg: "操作成功",
-    data: ['sys:user:add', 'sys:user:edit', 'sys:user:delete', 'sys:user:import', 'sys:user:export'],
-    success: true
+    status: 200,
+    message: "操作成功",
+    result: ['sys:user:add', 'sys:user:edit', 'sys:user:delete', 'sys:user:import', 'sys:user:export'],
   }
   if (item || token) {
-    result.code = 99998;
-    result.msg = "请重新登录";
-    result.success = false;
+    result.status = 99998;
+    result.message = "请重新登录";
   }
   return result;
 }
@@ -297,15 +293,13 @@ const getMenu = (req: any, res: any) => {
   let item = JSON.parse(req.body);
   let token = item ? item.token : null;
   let result: Result = {
-    code: 200,
-    msg: "操作成功",
-    data: menus,
-    success: true
+    status: 200,
+    message: "操作成功",
+    result: menus,
   }
   if (item || token) {
-    result.code = 99998;
-    result.msg = "请重新登录";
-    result.success = false;
+    result.status = 99998;
+    result.message = "请重新登录";
   }
   return result;
 }

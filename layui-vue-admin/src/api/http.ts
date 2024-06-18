@@ -10,7 +10,7 @@ type TAxiosOption = {
  
 const config: TAxiosOption = {
     timeout: 5000,
-    baseURL: "http://localhost:8080"
+    baseURL: "http://localhost:8000"
 }
  
 class Http {
@@ -22,7 +22,7 @@ class Http {
         this.service.interceptors.request.use((config: InternalAxiosRequestConfig) => {
             const userInfoStore = useUserStore();
             if (userInfoStore.token) {
-                (config.headers as AxiosRequestHeaders).token = userInfoStore.token as string
+                (config.headers as AxiosRequestHeaders).Authorization = "Bearer " + userInfoStore.token as string
             } else {
                 if(router.currentRoute.value.path!=='/login') {
                     router.push('/login');
