@@ -16,7 +16,6 @@ class User(AbstractUser, NewModel):
     email = models.CharField(max_length=64, blank=False, null=False, unique=True, verbose_name="Email")
     phone = models.CharField(max_length=11, blank=False, null=False, unique=True, verbose_name="Phone Number")
     avatar = models.ImageField(upload_to='avatar', default='avatar/luck.jpg')
-    created_at = super().date_joined
 
     def __str__(self):
         return self.username
