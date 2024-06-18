@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
 
-    'apps.Users',
-    'apps.Perms',
+    'apps.Users.apps.UsersConfig',
+    'apps.Perms.apps.PermsConfig',
 ]
 
 MIDDLEWARE = [
@@ -138,6 +138,7 @@ CACHES = {
     }
 }
 
+AUTH_USER_MODEL = 'Users.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
