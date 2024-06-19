@@ -61,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'utils.common_exception.CommonExceptionMiddleware',
+    'utils.common_exception.CommonExceptionMiddleware',     # exception handler
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -137,8 +137,6 @@ CACHES = {
         }
     }
 }
-
-AUTH_USER_MODEL = 'Users.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

@@ -1,17 +1,31 @@
 from django.db import models
 from utils import NewModel
-from django.contrib.auth.models import AbstractUser
 from apps.Perms.models import Role
+from django.contrib.auth.hashers import make_password, check_password
 # Create your models here.
 
 
-class User(AbstractUser, NewModel):
+class Users(NewModel):
 
+    USERNAME_FIELD = 'username'
     _gender = ((0, 'female'), (1, 'male'), (2, 'Unknown'))
+
+    username = models.CharField(max_length=64, unique=True, null=True, blank=True, verbose_name='Username')
+    password = models.CharField(max_length=64, null=True, blank=True, verbose_name='Password')
     gender = models.PositiveSmallIntegerField(choices=_gender, default=1, verbose_name='Gender')
     email = models.CharField(max_length=64, blank=False, null=False, unique=True, verbose_name="Email")
     phone = models.CharField(max_length=11, blank=False, null=False, unique=True, verbose_name="Phone Number")
     avatar = models.ImageField(upload_to='avatar', default='avatar/luck.jpg')
+
+    is_active = models.BooleanField(default=True, verbose_name='Is Active?')
+    is_superuser = models.BooleanField(default=False, verbose_name='Is Superuser?')
+
+    @staticmethod
+    def make_password(password, salt=None, hasher="default"):
+        return make_password(password, salt=salt, hasher=hasher)
+
+    def check_password(self, password):
+        return check_password(password, self.password)
 
     def __str__(self):
         return self.username
@@ -30,7 +44,7 @@ class OnlineUser(NewModel):
     token = models.CharField(max_length=255, verbose_name='Token', blank=True, null=True)
 
     user = models.ForeignKey(
-        to='User',
+        to='Users',
         related_name='online',
         on_delete=models.PROTECT,
         db_constraint=False,
@@ -62,7 +76,7 @@ class Post(NewModel):
 class UserRoles(NewModel):
 
     user = models.ForeignKey(
-        to='User',
+        to='Users',
         on_delete=models.PROTECT,
         db_constraint=False,
         verbose_name='User',
@@ -88,7 +102,7 @@ class UserRoles(NewModel):
 class UserPosts(NewModel):
 
     user = models.ForeignKey(
-        to='User',
+        to='Users',
         db_constraint=False,
         verbose_name='User',
         on_delete=models.PROTECT,
