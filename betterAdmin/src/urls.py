@@ -22,8 +22,8 @@ from django.conf import settings
 
 urlpatterns = [
 
-    path('api/v1/user/', include('apps.Users.urls')),   # 用户相关
-    path('api/v1/perm/', include('apps.Perms.urls')),   # rbac 权限系统
+    path('api/v1/user/', include('apps.Users.urls')),   # Users
+    path('api/v1/perm/', include('apps.Perms.urls')),   # rbac system
 
-    path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
+    path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),   # media directory
 ]

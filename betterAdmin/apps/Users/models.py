@@ -1,15 +1,11 @@
 from django.db import models
 from utils import NewModel
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.hashers import make_password, check_password
-
+from apps.Perms.models import Role
 # Create your models here.
 
 
 class User(AbstractUser, NewModel):
-    """
-    用户表
-    """
 
     _gender = ((0, 'female'), (1, 'male'), (2, 'Unknown'))
     gender = models.PositiveSmallIntegerField(choices=_gender, default=1, verbose_name='Gender')
@@ -22,31 +18,94 @@ class User(AbstractUser, NewModel):
 
     class Meta:
         db_table = 'better_user'
-        verbose_name = '用户表'
+        verbose_name = 'User'
         verbose_name_plural = verbose_name
 
 
 class OnlineUser(NewModel):
-    """
-    在线用户表
-    """
 
-    addr = models.CharField(max_length=64, verbose_name='在线用户登录地址', blank=True, null=True)
-    browser = models.CharField(max_length=128, verbose_name='浏览器', blank=True, null=True)
-    ip = models.CharField(max_length=64, verbose_name='用户登录ip', blank=True, null=True)
-    token = models.CharField(max_length=255, verbose_name='存用户token', blank=True, null=True)
-    # 关联
+    addr = models.CharField(max_length=64, verbose_name='Login Addr', blank=True, null=True)
+    browser = models.CharField(max_length=128, verbose_name='Browser', blank=True, null=True)
+    ip = models.CharField(max_length=64, verbose_name='IP', blank=True, null=True)
+    token = models.CharField(max_length=255, verbose_name='Token', blank=True, null=True)
+
     user = models.ForeignKey(
         to='User',
         related_name='online',
         on_delete=models.PROTECT,
         db_constraint=False,
-        verbose_name='和用户的一对多',
+        verbose_name='One to Many for User',
         null=True,
         blank=True
     )
 
     class Meta:
         db_table = 'better_online_user'
-        verbose_name = '在线用户的记录表'
+        verbose_name = 'Online User'
+        verbose_name_plural = verbose_name
+
+
+class Post(NewModel):
+
+    name = models.CharField(max_length=64, verbose_name='Name')
+    desc = models.TextField(verbose_name='Description')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'better_post'
+        verbose_name = 'Post'
+        verbose_name_plural = verbose_name
+
+
+class UserRoles(NewModel):
+
+    user = models.ForeignKey(
+        to='User',
+        on_delete=models.PROTECT,
+        db_constraint=False,
+        verbose_name='User',
+        null=True,
+        blank=True
+    )
+
+    role = models.ForeignKey(
+        to=Role,
+        on_delete=models.PROTECT,
+        db_constraint=False,
+        verbose_name='Role',
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        db_table = 'better_user_roles'
+        verbose_name = 'User Roles'
+        verbose_name_plural = verbose_name
+
+
+class UserPosts(NewModel):
+
+    user = models.ForeignKey(
+        to='User',
+        db_constraint=False,
+        verbose_name='User',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+
+    post = models.ForeignKey(
+        to='Post',
+        db_constraint=False,
+        verbose_name='Post',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        db_table = 'better_user_posts'
+        verbose_name = 'User Posts'
         verbose_name_plural = verbose_name

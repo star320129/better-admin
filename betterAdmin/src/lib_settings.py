@@ -41,13 +41,10 @@ EMAIL_USE_SSL = True  # 启用SSL加密
 # websocket
 CHANNEL_LAYERS = {
     "default": {
-        # 1、使用内存作为通道（开发使用）
-        # "BACKEND": "channels.layers.InMemoryChannelLayer",
-        # 2、使用redis（上线使用）
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            # 'hosts': ["redis://localhost:6379/3"],
-            'hosts': ["redis://60.204.238.150:6379/3"],
+            'hosts': ["redis://localhost:6379/3"],
+            # 'hosts': ["redis://60.204.238.150:6379/3"],
         },
     }
 }
