@@ -22,7 +22,7 @@ class Http {
         this.service.interceptors.request.use((config: InternalAxiosRequestConfig) => {
             const userInfoStore = useUserStore();
             if (userInfoStore.token) {
-                (config.headers as AxiosRequestHeaders).Authorization = "Bearer " + userInfoStore.token as string
+                (config.headers as AxiosRequestHeaders).token = userInfoStore.token as string
             } else {
                 if(router.currentRoute.value.path!=='/login') {
                     router.push('/login');
@@ -35,7 +35,7 @@ class Http {
 
         /* 响应拦截 */
         this.service.interceptors.response.use((response: AxiosResponse<any>) => {
-            switch (response.data.code) {
+            switch (response.data.status) {
                 case 200:
                     return response.data;
                 case 500:

@@ -78,7 +78,7 @@
             @changeSelectedKey="changeMainSelectedKey"
           >
             <template v-for="(menu, index) in mainMenus" :key="index">
-              <lay-menu-item :id="menu.id" v-if="index < 4">
+              <lay-menu-item :id="menu.path" v-if="index < 4">
                 <template #title>{{ menu.title }}</template>
               </lay-menu-item>
             </template>
@@ -96,7 +96,7 @@
               <lay-dropdown-menu>
                 <template v-for="(menu, index) in mainMenus">
                   <lay-dropdown-menu-item
-                    :key="menu.id"
+                    :key="menu.path"
                     v-if="index >= 4"
                     @click="changeMainSelectedKey(menu.id)"
                     >{{ menu.title }}</lay-dropdown-menu-item

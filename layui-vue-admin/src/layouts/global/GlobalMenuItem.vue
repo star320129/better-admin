@@ -1,7 +1,7 @@
 <template>
     <template v-for="(menu, index) in menus" :key="index">
         <template v-if="menu.children">
-            <lay-sub-menu :id="menu.id">
+            <lay-sub-menu :id="menu.path">
                 <template #icon>
                     <lay-icon :type="menu.icon"></lay-icon>
                 </template>
@@ -10,7 +10,7 @@
             </lay-sub-menu>
         </template>
         <template v-else>
-            <lay-menu-item :id="menu.id">
+            <lay-menu-item :id="menu.path">
                 <template #icon>
                     <lay-icon :type="menu.icon"></lay-icon>
                 </template>
