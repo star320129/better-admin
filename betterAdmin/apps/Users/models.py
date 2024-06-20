@@ -13,16 +13,19 @@ class Users(NewModel):
     username = models.CharField(max_length=64, unique=True, null=True, blank=True, verbose_name='Username')
     password = models.CharField(max_length=64, null=True, blank=True, verbose_name='Password')
     gender = models.PositiveSmallIntegerField(choices=_gender, default=1, verbose_name='Gender')
-    email = models.CharField(max_length=64, blank=False, null=False, unique=True, verbose_name="Email")
-    phone = models.CharField(max_length=11, blank=False, null=False, unique=True, verbose_name="Phone Number")
+    email = models.CharField(max_length=64, blank=True, null=True, unique=True, verbose_name="Email")
+    phone = models.CharField(max_length=11, blank=True, null=True, unique=True, verbose_name="Phone Number")
     avatar = models.ImageField(upload_to='avatar', default='avatar/luck.jpg')
 
     is_active = models.BooleanField(default=True, verbose_name='Is Active?')
     is_superuser = models.BooleanField(default=False, verbose_name='Is Superuser?')
 
     @staticmethod
-    def make_password(password, salt=None, hasher="default"):
+    def create_password(password, salt=None, hasher="default"):
         return make_password(password, salt=salt, hasher=hasher)
+
+    def set_password(self, password):
+        self.password = make_password(password)
 
     def check_password(self, password):
         return check_password(password, self.password)
