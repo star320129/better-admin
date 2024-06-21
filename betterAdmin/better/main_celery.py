@@ -1,11 +1,14 @@
 import os
-import django
+
 from celery import Celery
-from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'src.settings')
-django.setup()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'better.settings')
 
+app = Celery('better')
 
-app = Celery('main_celery')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+
+# Load task modules from all registered Django apps.
+app.autodiscover_tasks()
+
 

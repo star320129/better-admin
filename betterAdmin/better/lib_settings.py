@@ -5,7 +5,7 @@ Websocket配置
 """
 
 # Broker配置，使用Redis作为消息中间件
-BROKER_URL = 'redis://127.0.0.1:6379/1'
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
 # BACKEND配置，使用redis
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'
 CELERY_ACCEPT_CONTENT = ['json']
