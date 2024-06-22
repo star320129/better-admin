@@ -57,6 +57,6 @@ def new_exception_handler(exc, content):
 
     if drf_exception_handler is not None:
         record_log(content.get('request'), exc, content.get('view'))
-        return NewResponse(message=drf_exception_handler.data.get('detail', "The system is busy now !"), status=drf_exception_handler.status)
+        return NewResponse(message=drf_exception_handler.data.get('detail', "The system is busy now !"), status=drf_exception_handler.status_code)
 
     return None

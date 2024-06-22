@@ -11,8 +11,10 @@ class NewResponse(Response):
             'status': self.status,
             'message': self.message,
         }
-        if kwargs:
-            data.update(kwargs)
 
-        super().__init__(data=data, status=status, **kwargs)
+        assert isinstance(kwargs, dict), 'kwargs must be a dict!'
+
+        data.update(kwargs)
+
+        super().__init__(data=data, status=status)
 

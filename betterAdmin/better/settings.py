@@ -20,6 +20,8 @@ sys.path.append(str(BETTER_DIR))
 
 from .lib_settings import *
 
+SERVER_URL = "http://localhost:8000"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -190,6 +192,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.RefreshToken",),
 }
 
 

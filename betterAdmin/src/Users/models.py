@@ -11,7 +11,7 @@ class Users(NewModel):
     _gender = ((0, 'female'), (1, 'male'), (2, 'Unknown'))
 
     username = models.CharField(max_length=64, unique=True, null=True, blank=True, verbose_name='Username')
-    password = models.CharField(max_length=64, null=True, blank=True, verbose_name='Password')
+    password = models.CharField(max_length=255, null=True, blank=True, verbose_name='Password')
     gender = models.PositiveSmallIntegerField(choices=_gender, default=1, verbose_name='Gender')
     email = models.CharField(max_length=64, blank=True, null=True, unique=True, verbose_name="Email")
     phone = models.CharField(max_length=11, blank=True, null=True, unique=True, verbose_name="Phone Number")
@@ -21,14 +21,18 @@ class Users(NewModel):
     is_superuser = models.BooleanField(default=False, verbose_name='Is Superuser?')
 
     @staticmethod
-    def create_password(password, salt=None, hasher="default"):
+    def _create_password(password, salt=None, hasher="default"):
         return make_password(password, salt=salt, hasher=hasher)
 
     def set_password(self, password):
-        self.password = make_password(password)
+        self.password = self._create_password(password)
 
     def check_password(self, password):
         return check_password(password, self.password)
+
+    @property
+    def is_authenticated(self):
+        return True
 
     def __str__(self):
         return self.username
