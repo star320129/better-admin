@@ -118,18 +118,19 @@ export default defineComponent({
 
     const loginSubmit = async () => {
       loging.value = true;
-      login(loginForm).then(({ status, message, result }) => {
+      login(loginForm).then((data) => {
         setTimeout(() => {
           loging.value = false;
-          if (status == 200) {
-            layer.msg(message, { icon: 1 }, async () => {
-              userStore.token = result.token
+          if (data.status == 200) {
+            layer.msg(data.message, { icon: 1 }, async () => {
+              userStore.token = data.result.token
+              userStore.userInfo = data.result
               await userStore.loadMenus()
               await userStore.loadPermissions()
               router.push('/')
             })
           } else {
-            layer.msg(message, { icon: 2 })
+            layer.msg(data.message, { icon: 2 })
           }
         }, 1000)
       })

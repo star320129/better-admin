@@ -1,10 +1,11 @@
+```ts
 import { Result } from "../types/result";
 import { User } from "../types/user";
 
 let user: User = {
   'userId': '1992',
   'username': 'admin',
-}
+} 
 
 const menus = [
   {
@@ -336,3 +337,4 @@ const getUpload = (req: any, res: any) => {
 export default {
   getInfo, getMenu, getLogin, getPermission, getUpload
 }
+```
