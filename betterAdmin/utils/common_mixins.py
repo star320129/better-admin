@@ -1,6 +1,6 @@
 from rest_framework import mixins
 from .common_response import NewResponse
-__all__ = ['NewDeleteMixin', 'NewListMixin', 'NewCreateMixin', 'NewUpdateMixin', 'NewDeleteMixin']
+__all__ = ['NewRetrieveMixin', 'NewListMixin', 'NewCreateMixin', 'NewUpdateMixin', 'NewDeleteMixin']
 
 
 class NewListMixin(mixins.ListModelMixin):
