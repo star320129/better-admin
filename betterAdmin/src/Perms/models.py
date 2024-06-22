@@ -6,8 +6,8 @@ from utils import NewModel
 class Role(NewModel):
 
     name = models.CharField(max_length=32, unique=True, blank=True, null=True, verbose_name='Name')
-    level = models.PositiveSmallIntegerField(default=1, blank=True, null=True, verbose_name='Level')
-    state = models.BooleanField(default=True, blank=True, null=True, verbose_name='IS Active')
+    level = models.PositiveSmallIntegerField(default=1, blank=True, verbose_name='Level')
+    state = models.BooleanField(default=True, blank=True, verbose_name='IS Active')
 
     def __str__(self):
         return self.name
@@ -27,7 +27,7 @@ class Permission(NewModel):
     elem = models.PositiveSmallIntegerField(choices=_type, default=0, blank=True, verbose_name='Type')
     icon = models.CharField(max_length=255, blank=True, null=True, verbose_name='Icon')
 
-    is_extra_link = models.BooleanField(default=False, blank=True, null=True, verbose_name='IS Extra Link')
+    is_extra_link = models.BooleanField(default=False, blank=True, verbose_name='IS Extra Link')
 
     parent = models.ForeignKey(
         'self',
