@@ -13,7 +13,7 @@ from src.Users.models import Users, Post, UserPosts
 
 # pas = Users.create_password('123456')
 # print(pas)
-# user = Users.objects.filter(username='admin').first()
+# user = Users.objects.create(username='any')
 # user.set_password('123456')
 # user.password = pas
 # user.save()
@@ -284,108 +284,7 @@ res = [
                 }
             ]
         },
-        {
-            "id": 10,
-            "name": "系统管理",
-            "path": "/system",
-            "icon": "layui-icon-set",
-            "children": [
-                {
-                    "id": 33,
-                    "name": "用户管理",
-                    "path": "/system/user",
-                    "icon": "layui-icon-user",
-                    "children": [
-                        {
-                            "id": 45,
-                            "name": "添加用户",
-                            "path": "sys:user:add",
-                            "icon": None,
-                            "children": []
-                        },
-                        {
-                            "id": 46,
-                            "name": "编辑用户",
-                            "path": "sys:user:edit",
-                            "icon": None,
-                            "children": []
-                        },
-                        {
-                            "id": 47,
-                            "name": "删除用户",
-                            "path": "sys:user:delete",
-                            "icon": None,
-                            "children": []
-                        },
-                        {
-                            "id": 48,
-                            "name": "用户导入",
-                            "path": "sys:user:import",
-                            "icon": None,
-                            "children": []
-                        },
-                        {
-                            "id": 49,
-                            "name": "用户导出",
-                            "path": "sys:user:export",
-                            "icon": None,
-                            "children": []
-                        }
-                    ]
-                },
-                {
-                    "id": 34,
-                    "name": "角色管理",
-                    "path": "/system/role",
-                    "icon": "layui-icon-user",
-                    "children": []
-                },
-                {
-                    "id": 35,
-                    "name": "菜单管理",
-                    "path": "/system/menu",
-                    "icon": "layui-icon-spread-left",
-                    "children": []
-                },
-                {
-                    "id": 36,
-                    "name": "机构管理",
-                    "path": "/system/organization",
-                    "icon": "layui-icon-transfer",
-                    "children": []
-                },
-                {
-                    "id": 37,
-                    "name": "字典管理",
-                    "path": "/system/dictionary",
-                    "icon": "layui-icon-read",
-                    "children": []
-                },
-                {
-                    "id": 38,
-                    "name": "文件管理",
-                    "path": "/system/file",
-                    "icon": "layui-icon-file",
-                    "children": []
-                },
-                {
-                    "id": 39,
-                    "name": "登录日志",
-                    "path": "/system/login",
-                    "icon": "layui-icon-date",
-                    "children": []
-                },
-                {
-                    "id": 40,
-                    "name": "操作日志",
-                    "path": "/system/option",
-                    "icon": "layui-icon-survey",
-                    "children": []
-                }
-            ]
-        }
-    ]
-
+ ]
 
 
 # def custom_dir(result):

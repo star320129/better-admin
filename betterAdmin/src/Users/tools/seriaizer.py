@@ -3,6 +3,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .. import models
 import re
 from django.conf import settings
+from django.core.cache import cache
 
 
 class UserMixin:
@@ -36,11 +37,23 @@ class UserMixin:
 
     @staticmethod
     def generate_token(user):
+        """
+        签发token, 并存储在redis中
+        :param user:
+        :return:
+        """
         token = RefreshToken.for_user(user)
+        cache.set('token', str(token))
         return token
 
     @staticmethod
     def roles_or_posts(obj, default):
+        """
+        获取用户角色和岗位信息
+        :param obj: user object
+        :param default: roles or posts
+        :return:
+        """
         post_pk = [post.pk for post in models.UserPosts.objects.filter(user_id=obj.pk).all()]
         role_pk = [role.pk for role in models.UserRoles.objects.filter(user_id=obj.pk).all()]
 
@@ -61,7 +74,8 @@ class LoginSerializer(serializers.Serializer, UserMixin):
         user = self.check_user(account, password)
 
         post_list = self.roles_or_posts(user, 'posts')
-        self.context['request'].user = user
+        self.context['request'].user = user  # 登录成功全局user
+        self.context['token'] = str(self.generate_token(user))
         return {
             'id': user.id,
             'username': user.username,
@@ -73,7 +87,6 @@ class LoginSerializer(serializers.Serializer, UserMixin):
             'created_at': user.created_at,
             'created_by': user.created_by,
             'is_active': user.is_active,
-            'token': str(self.generate_token(user)),
         }
 
 

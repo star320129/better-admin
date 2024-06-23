@@ -7,7 +7,5 @@ router.register('anyUser', views.LoginView, 'anyUser')
 router.register('auth', views.UserView, 'auth')
 
 urlpatterns = [
-
     path('admin/', admin.site.urls),
-
 ] + router.urls

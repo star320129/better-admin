@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.common_exception.CommonExceptionMiddleware',     # exception handler
+    'utils.common_middleware.RouterPermissionMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
