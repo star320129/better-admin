@@ -123,7 +123,7 @@ export default defineComponent({
           loging.value = false;
           if (data.status == 200) {
             layer.msg(data.message, { icon: 1 }, async () => {
-              userStore.token = data.result.token
+              userStore.token = data.token
               userStore.userInfo = data.result
               await userStore.loadMenus()
               await userStore.loadPermissions()
