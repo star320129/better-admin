@@ -45,8 +45,8 @@ class Users(NewModel):
 
 class OnlineUser(NewModel):
 
-    addr = models.CharField(max_length=64, verbose_name='Login Addr', blank=True, null=True)
-    browser = models.CharField(max_length=128, verbose_name='Browser', blank=True, null=True)
+    addr = models.CharField(max_length=128, verbose_name='Login Addr', blank=True, null=True)
+    browser = models.CharField(max_length=255, verbose_name='Browser', blank=True, null=True)
     ip = models.CharField(max_length=64, verbose_name='IP', blank=True, null=True)
     token = models.CharField(max_length=255, verbose_name='Token', blank=True, null=True)
 

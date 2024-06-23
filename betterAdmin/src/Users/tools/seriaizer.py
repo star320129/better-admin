@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from .. import models
 import re
+from utils.common_function import token_cache_key
 from django.conf import settings
 from django.core.cache import cache
 
@@ -33,6 +34,9 @@ class UserMixin:
         if not user.check_password(password):
             raise serializers.ValidationError('password is wrong!')
 
+        if not user.is_active:
+            raise serializers.ValidationError('account is inactive!')
+
         return user
 
     @staticmethod
@@ -43,7 +47,8 @@ class UserMixin:
         :return:
         """
         token = RefreshToken.for_user(user)
-        cache.set('token', str(token))
+        user.cache_key = token_cache_key(token)
+        cache.set(user.cache_key, str(token))
         return token
 
     @staticmethod
@@ -54,8 +59,8 @@ class UserMixin:
         :param default: roles or posts
         :return:
         """
-        post_pk = [post.pk for post in models.UserPosts.objects.filter(user_id=obj.pk).all()]
-        role_pk = [role.pk for role in models.UserRoles.objects.filter(user_id=obj.pk).all()]
+        post_pk = [rel.post_id for rel in models.UserPosts.objects.filter(user_id=obj.pk).all()]
+        role_pk = [rel.role_id for rel in models.UserRoles.objects.filter(user_id=obj.pk).all()]
 
         dic = {
             'roles': [role.name for role in models.Role.objects.filter(pk__in=role_pk).all()],
@@ -76,6 +81,7 @@ class LoginSerializer(serializers.Serializer, UserMixin):
         post_list = self.roles_or_posts(user, 'posts')
         self.context['request'].user = user  # 登录成功全局user
         self.context['token'] = str(self.generate_token(user))
+
         return {
             'id': user.id,
             'username': user.username,

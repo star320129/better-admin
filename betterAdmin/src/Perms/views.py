@@ -1,11 +1,13 @@
 from utils import NewResponse
 from utils.common_mixins import *
+from utils.common_function import init_queryset
 from utils.common_jwt_authentication import NewJWTAuthentication
 from . import models
 from django.core.cache import cache
 from .tools import UserPermission, ObtainSerializer, ButtonSerializer
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 
 class PermissionView(
@@ -16,7 +18,7 @@ class PermissionView(
     NewDeleteMixin,
 ):
     authentication_classes = (NewJWTAuthentication,)
-    permission_classes = (IsAuthenticated, UserPermission,)
+    permission_classes = (IsAuthenticated, UserPermission)
     queryset = models.Permission.objects.filter(is_deleted=False, elem=0).all()
     serializer_class = ObtainSerializer
 
@@ -26,6 +28,15 @@ class PermissionView(
         if res.data.get('result'):
             res.data['result'] = self.custom_dir(res.data.get('result'))
         return res
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return self.queryset
+
+        queryset = init_queryset(self.request.user, elem=0)
+        if queryset:
+            return queryset
+        raise PermissionDenied(detail='请联系管理员添加权限!')
 
     @staticmethod
     def custom_dir(result):
@@ -37,7 +48,6 @@ class PermissionView(
             elif 'children' in dic:
                 # 如果 'children' 为空或不存在，从字典中删除它
                 del dic['children']
-
             return dic
 
         # 构建一个新列表
@@ -53,7 +63,7 @@ class ButtonView(
     NewListMixin,
 ):
     authentication_classes = (NewJWTAuthentication,)
-    permission_classes = (IsAuthenticated, UserPermission,)
+    permission_classes = (IsAuthenticated, UserPermission)
     queryset = models.Permission.objects.filter(is_deleted=False, elem=3).all()
     serializer_class = ButtonSerializer
 
@@ -62,3 +72,12 @@ class ButtonView(
         if response.data.get('result'):
             response.data['result'] = [{_['name']: _['path']} for _ in response.data['result']]
         return response
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return self.queryset
+
+        queryset = init_queryset(self.request.user, elem=3)
+        if queryset:
+            return queryset
+        raise PermissionDenied(detail='请联系管理员添加权限!')

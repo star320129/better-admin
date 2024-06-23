@@ -5,10 +5,8 @@ class UserPermission(BasePermission):
 
     def has_permission(self, request, view):
 
-        if request.user.is_superuser:
+        if request.user.is_superuser or view.action == 'list':
             return True
 
     def has_object_permission(self, request, view, obj):
-
-        if request.user.is_superuser:
-            return True
+        self.has_permission(request, view)

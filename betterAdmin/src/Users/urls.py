@@ -4,7 +4,8 @@ from . import views
 from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
 router.register('anyUser', views.LoginView, 'anyUser')
-router.register('auth', views.UserView, 'auth')
+router.register('action', views.UserView, 'action')
+router.register('post', views.PostView, 'post')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

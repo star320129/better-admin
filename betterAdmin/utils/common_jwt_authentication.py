@@ -5,6 +5,7 @@ from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.utils import get_md5_hash_password
 from django.core.cache import cache
 from src.Users.models import Users
+from utils.common_function import token_cache_key
 
 
 class NewJWTAuthentication(JWTAuthentication):
@@ -17,7 +18,7 @@ class NewJWTAuthentication(JWTAuthentication):
             raise AuthenticationFailed("此令牌对任何类型的令牌无效")
 
         # 检测token是否更新， 强制下线功能思路
-        if not token or token != cache.get('token'):
+        if not token or token != cache.get(token_cache_key(token)):
             raise AuthenticationFailed('此令牌已失效')
 
         validated_token = self.get_validated_token(token)

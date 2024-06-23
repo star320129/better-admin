@@ -8,7 +8,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'better.settings')
 import django
 django.setup()
 
-from src.Users.models import Users, Post, UserPosts
+from src.Users.models import Users, Post, UserPosts, UserRoles
 
 
 # pas = Users.create_password('123456')
@@ -324,6 +324,6 @@ res = [
 # a = custom_dir(res)
 # print(json.dumps(a, ensure_ascii=False))
 
-
+# UserRoles.objects.create(user_id=3, role_id=2)
 
 
