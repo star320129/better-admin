@@ -11,8 +11,8 @@ class NewJWTAuthentication(JWTAuthentication):
 
     def authenticate(self, request):
         header, token = self.get_authorization(request)
-        assert header and header == 'Bearer', "此令牌对任何类型的令牌无效"
-
+        if not header or header != 'Bearer':
+            raise AuthenticationFailed("此令牌对任何类型的令牌无效")
         validated_token = self.get_validated_token(token)
 
         return self.get_user(validated_token), validated_token
@@ -20,7 +20,9 @@ class NewJWTAuthentication(JWTAuthentication):
     @staticmethod
     def get_authorization(request: Request):
         authorization = request.headers.get('token')
-        assert authorization, "login first!"
+        if not authorization:
+            raise AuthenticationFailed("login first!")
+
         authorization_list = authorization.split(" ")
         return authorization_list[0], authorization_list[1]
 
