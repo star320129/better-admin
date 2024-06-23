@@ -16,11 +16,13 @@ export function useTab() {
   if (routes) {
     routes.forEach(route => {
       if (route.meta && route.meta.affix) {
+
         tabs.value.push({
           ...route.meta,
           id: route.path,
-          name: route?.name
+          // name: route?.name
         })
+        // console.log(tabs.value)
         tabsCache.push(route.path)
       }
     })
@@ -31,7 +33,7 @@ export function useTab() {
     path && tabs.value.push({
       ...path.meta,
       id: route.path,
-      name: route?.name,
+      // name: route?.name,
     })
   }
 
@@ -67,7 +69,7 @@ export function useTab() {
       }
     });
     if (!bool) {
-      tabs.value.push({ id: route.path, title: route.meta.title, name: route?.name });
+      tabs.value.push({ id: route.path, name: route.meta.name });
     }
     appStore.$patch((state) => {
       state.keepAliveList = tabs.value.map((item: any) => item?.name).filter((item: any) => item)

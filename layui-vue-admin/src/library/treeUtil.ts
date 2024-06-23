@@ -9,7 +9,7 @@ const getDepth = function () {};
 export const getNode = function(list: any[], id: string): any {
   for (let i in list) {
     let item = list[i];
-    if (item.id === id) {
+    if (item.path === id) {
       return item;
     } else {
       if (item.children) {
@@ -30,7 +30,7 @@ export const getNode = function(list: any[], id: string): any {
  */
 export const getParents = function(list:any[], id: string) : any{
   for (let i in list) {
-      if (list[i].id === id) {
+      if (list[i].path === id) {
          return [list[i]]
       }
       if (list[i].children) {

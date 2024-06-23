@@ -7,10 +7,10 @@
       @close="close"
     >
       <template :key="tab" v-for="tab in tabs">
-        <lay-tab-item :id="tab.id" :title="tab.title" :closable="tab.closable">
+        <lay-tab-item :id="tab.id" :title="tab.name" :closable="tab.closable">
           <template #title>
             <span class="dot"></span>
-            {{ tab.title }}
+            {{ tab.name }}
           </template>
         </lay-tab-item>
       </template>

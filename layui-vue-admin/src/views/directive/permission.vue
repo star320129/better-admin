@@ -12,11 +12,11 @@
             <lay-card>
                 <template #title>我的按钮</template>
                 <lay-button-container>
-                    <lay-button v-permission="['sys:user:add']" type="primary" >新增</lay-button>
-                    <lay-button v-permission="['sys:user:edit']">修改</lay-button>
-                    <lay-button v-permission="['sys:user:delete']">删除</lay-button>
-                    <lay-button v-permission="['sys:user:import']">导入</lay-button>
-                    <lay-button v-permission="['sys:user:export']">导出</lay-button>
+                    <lay-button v-permission='{"添加用户": "sys:user:add"}' type="primary" >新增</lay-button>
+                    <lay-button v-permission='{"编辑用户": "sys:user:edit"}'>修改</lay-button>
+                    <lay-button v-permission='{"删除用户": "sys:user:delete"}'>删除</lay-button>
+                    <lay-button v-permission='{"用户导入": "sys:user:import"}'>导入</lay-button>
+                    <lay-button v-permission='{"用户导出": "sys:user:export"}'>导出</lay-button>
                 </lay-button-container>
             </lay-card>
         </lay-container>

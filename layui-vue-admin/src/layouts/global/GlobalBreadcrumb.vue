@@ -1,7 +1,7 @@
 <template>
     <lay-breadcrumb>
         <lay-breadcrumb-item v-for="(breadcrumb, index) in breadcrumbs" :key="index">
-            {{ breadcrumb.title }}
+            {{ breadcrumb.name }}
         </lay-breadcrumb-item>
     </lay-breadcrumb>
 </template>
@@ -21,5 +21,6 @@ import { useUserStore } from "../../store/user";
 
 const userStore = useUserStore();
 const route = useRoute();
+// console.log(route.path)
 const breadcrumbs = computed(() => getParents(userStore.menus, route.path)?.reverse());
 </script>

@@ -5,7 +5,7 @@
                 <template #icon>
                     <lay-icon :type="menu.icon"></lay-icon>
                 </template>
-                <template #title>{{ menu.title }}</template>
+                <template #title>{{ menu.name }}</template>
                 <GlobalMenuItem :menus="menu.children"></GlobalMenuItem>
             </lay-sub-menu>
         </template>
@@ -14,7 +14,7 @@
                 <template #icon>
                     <lay-icon :type="menu.icon"></lay-icon>
                 </template>
-                <template #title>{{ menu.title }}</template>
+                <template #title>{{ menu.name }}</template>
             </lay-menu-item>
         </template>
     </template>

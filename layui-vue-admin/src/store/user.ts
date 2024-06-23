@@ -13,15 +13,15 @@ export const useUserStore = defineStore({
   },
   actions: {
     async loadMenus(){
-      const { data, code } = await menu();
-      if(code == 200) {
-        this.menus = data;
+      const data = await menu();
+      if(data.status == 200) {
+        this.menus = data.result;
       }
     },
     async loadPermissions(){
-      const { data, code } = await permission();
-      if(code == 200) {
-        this.permissions = data;
+      const data = await permission();
+      if(data.status == 200) {
+        this.permissions = data.result;
       }
     }
   },

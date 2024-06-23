@@ -23,7 +23,7 @@
         :width="sideWidth"
         :class="appStore.sideTheme == 'dark' ? 'dark changeBgc' : 'light'"
       >
-        <lay-logo v-if="appStore.logo"></lay-logo>
+        <lay-logo v-if="appStore.logo">你好!</lay-logo>
         <div class="side-menu-wrapper">
           <div
             class="side-menu1"
@@ -79,7 +79,7 @@
           >
             <template v-for="(menu, index) in mainMenus" :key="index">
               <lay-menu-item :id="menu.path" v-if="index < 4">
-                <template #title>{{ menu.title }}</template>
+                <template #title>{{ menu.name }}</template>
               </lay-menu-item>
             </template>
           </lay-menu>
@@ -98,8 +98,8 @@
                   <lay-dropdown-menu-item
                     :key="menu.path"
                     v-if="index >= 4"
-                    @click="changeMainSelectedKey(menu.id)"
-                    >{{ menu.title }}</lay-dropdown-menu-item
+                    @click="changeMainSelectedKey(menu.path)"
+                    >{{ menu.name }}</lay-dropdown-menu-item
                   >
                 </template>
               </lay-dropdown-menu>

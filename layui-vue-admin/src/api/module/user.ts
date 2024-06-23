@@ -5,9 +5,9 @@ export const login = function(loginForm: any) {
 }
 
 export const menu = function() {
-    return Http.get('/user/menu/')
+    return Http.get('/perm/auth/')
 }
 
 export const permission = function() {
-    return Http.get('/user/permission/')
+    return Http.get('/perm/buttons/')
 }

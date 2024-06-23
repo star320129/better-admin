@@ -45,7 +45,7 @@ export function useMenu() {
       selectedKey.value = route.path;
       const andParents = getParents(menus.value, route.path);
       if (andParents && andParents.length > 0) {
-        let andParentKeys = andParents.map((item: any) => item.id);
+        let andParentKeys = andParents.map((item: any) => item.path);
         if (isAccordion.value) {
           openKeys.value = [...andParentKeys];
         } else {
@@ -56,8 +56,8 @@ export function useMenu() {
     { immediate: true }
   );
 
-  const to = (id: string) => {
-    router.push(id);
+  const to = (path: string) => {
+    router.push(path);
   };
 
   function changeSelectedKey(key: string) {
@@ -66,7 +66,7 @@ export function useMenu() {
     if (node.type && node.type == "modal") {
       layer.open({
         type: "iframe",
-        content: node.id,
+        content: node.path,
         area: ["80%", "80%"],
         maxmin: true,
       });
@@ -74,7 +74,7 @@ export function useMenu() {
     }
 
     if (node.type && node.type == "blank") {
-      window.open(node.id, "_blank");
+      window.open(node.path, "_blank");
       return;
     }
 
@@ -87,7 +87,7 @@ export function useMenu() {
       var arr = getParents(menus.value, addArr[0]);
       if(arr && arr.length > 0) {
         openKeys.value = arr.map((item: any) => {
-          return item.id;
+          return item.path;
         });
       }
     } else {
@@ -98,11 +98,11 @@ export function useMenu() {
   function changeMainSelectedKey(key: string) {
 
     var node = getNode(userStore.menus, key);
-
+    console.log(node);
     if (node.type && node.type == "modal") {
       layer.open({
         type: "iframe",
-        content: node.id,
+        content: node.path,
         area: ["80%", "80%"],
         maxmin: true,
       });
@@ -110,7 +110,7 @@ export function useMenu() {
     }
 
     if (node.type && node.type == "blank") {
-      window.open(node.id, "_blank");
+      window.open(node.path, "_blank");
       return;
     }
 
