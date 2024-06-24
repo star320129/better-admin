@@ -139,7 +139,8 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100}
             # "PASSWORD": "123",
-        }
+        },
+
     }
 }
 

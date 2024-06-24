@@ -13,6 +13,9 @@ class AdminPermission(BasePermission):
         if request.user.is_superuser:
             return True
 
+        if '/user/online/' in request.path and request.user.is_superuser:
+            return True
+
         self.permissions = permissions_user(request.user)
         if any((
             ':'.join((self.prefix_action, view.action)) in self.permissions,

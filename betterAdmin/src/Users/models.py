@@ -60,6 +60,10 @@ class OnlineUser(NewModel):
         blank=True
     )
 
+    @property
+    def username(self):
+        return self.user.username
+
     class Meta:
         db_table = 'better_online_user'
         verbose_name = 'Online User'

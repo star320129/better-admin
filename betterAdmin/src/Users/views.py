@@ -4,7 +4,7 @@ from utils.common_mixins import *
 from . import models
 from ua_parser import user_agent_parser
 from .tools.seriaizer import PostSerializer
-from .tools import LoginSerializer, UserSerializer, AdminPermission
+from .tools import LoginSerializer, UserSerializer, AdminPermission, OnlineSerializer
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -30,10 +30,12 @@ class LoginView(GenericViewSet):
         # 登陆成功后添加到在线用户表
         models.OnlineUser.objects.update_or_create(
             user_id=request.user.id,
+            is_deleted=False,
             defaults={
                 'ip': request.META['REMOTE_ADDR'],
                 'token': request.user.cache_key,
                 'browser': browser,
+                'is_deleted': False,
             }
         )
         return NewResponse(message='login success!', token=serializer.context['token'], result=serializer.validated_data)
@@ -64,10 +66,13 @@ class PostView(
     queryset = models.Post.objects.all()
 
 
-# class OnlineUserView(
-#     GenericViewSet,
-#     NewListMixin,
-#     NewRetrieveMixin,
-#
-# ):
-#     ...
+class OnlineUserView(
+    GenericViewSet,
+    NewListMixin,
+    NewRetrieveMixin,
+
+):
+    authentication_classes = (NewJWTAuthentication, )
+    permission_classes = (IsAuthenticated, AdminPermission)
+    serializer_class = OnlineSerializer
+    queryset = models.OnlineUser.objects.all()

@@ -6,6 +6,7 @@ router = SimpleRouter()
 router.register('anyUser', views.LoginView, 'anyUser')
 router.register('action', views.UserView, 'action')
 router.register('post', views.PostView, 'post')
+router.register('online', views.OnlineUserView, 'online')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

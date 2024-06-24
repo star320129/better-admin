@@ -42,13 +42,13 @@ class UserMixin:
     @staticmethod
     def generate_token(user):
         """
-        签发token, 并存储在redis中
+        签发token, 并存储在redis中, cache.set()方法默认过期时间为300s！！！
         :param user:
         :return:
         """
         token = RefreshToken.for_user(user)
         user.cache_key = token_cache_key(token)
-        cache.set(user.cache_key, str(token))
+        cache.set(user.cache_key, str(token), timeout=86400)  # 一天
         return token
 
     @staticmethod
@@ -72,13 +72,18 @@ class UserMixin:
 class LoginSerializer(serializers.Serializer, UserMixin):
     account = serializers.CharField()
     password = serializers.CharField()
+    token = serializers.CharField()
 
     def validate(self, attrs):
         account = attrs.get('account')
         password = attrs.get('password')
+        invalid_token = attrs.get('token')
         user = self.check_user(account, password)
 
-        post_list = self.roles_or_posts(user, 'posts')
+        if invalid_token != 'undefined':   # 每次登录删除旧token
+            if cache.get(token_cache_key(invalid_token)):
+                cache.delete(token_cache_key(invalid_token))
+
         self.context['request'].user = user  # 登录成功全局user
         self.context['token'] = str(self.generate_token(user))
 
@@ -86,12 +91,7 @@ class LoginSerializer(serializers.Serializer, UserMixin):
             'id': user.id,
             'username': user.username,
             'password': user.password,
-            'posts': post_list,
-            'email': user.email,
-            'phone': user.phone,
             'avatar': ''.join((settings.SERVER_URL, settings.MEDIA_URL, str(user.avatar))),
-            'created_at': user.created_at,
-            'created_by': user.created_by,
             'is_active': user.is_active,
         }
 
@@ -122,9 +122,17 @@ class UserSerializer(serializers.ModelSerializer, UserMixin):
         return self.roles_or_posts(obj, 'roles')
 
 
-# class UserActionSerializer(serializers.ModelSerializer, UserMixin):
-#
-#     class Meta:
-#         model = models.Users
-#         fields = ('username', 'email', 'phone', 'roles', 'posts',)
+class UserActionSerializer(serializers.ModelSerializer, UserMixin):
 
+    class Meta:
+        model = models.Users
+        fields = ('username', 'email', 'phone')
+
+
+class OnlineSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = models.OnlineUser
+        fields = ('id', 'username', 'ip', 'addr', 'updated_at', 'token', 'browser')
