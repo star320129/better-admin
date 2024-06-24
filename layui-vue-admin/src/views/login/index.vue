@@ -116,9 +116,11 @@ export default defineComponent({
       vercode: 'DqJFN',
       token:'undefined',
     })
+
     if (userStore.token){
         loginForm.token = userStore.token;
     }
+
     console.log(loginForm)
     const loginSubmit = async () => {
       loging.value = true;
