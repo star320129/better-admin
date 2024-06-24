@@ -113,9 +113,13 @@ export default defineComponent({
     const loginForm = reactive({
       account: 'admin',
       password: '123456',
-      vercode: 'DqJFN'
+      vercode: 'DqJFN',
+      token:'undefined',
     })
-
+    if (userStore.token){
+        loginForm.token = userStore.token;
+    }
+    console.log(loginForm)
     const loginSubmit = async () => {
       loging.value = true;
       login(loginForm).then((data) => {
