@@ -8,6 +8,7 @@ from .tools import LoginSerializer, UserSerializer, AdminPermission, OnlineSeria
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from django.db import transaction
 
 
 class LoginView(GenericViewSet):
@@ -18,27 +19,32 @@ class LoginView(GenericViewSet):
     def login(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
+        self.store_online_user()
+        return NewResponse(message='login success!', token=serializer.context['token'], result=serializer.validated_data)
 
+    @transaction.atomic
+    def store_online_user(self):
         # 获取登录用户平台信息
-        user_agent = request.META.get('HTTP_USER_AGENT')
+        user_agent = self.request.META.get('HTTP_USER_AGENT')
         user_agent_info = user_agent_parser.Parse(user_agent)
         if 'Mozilla' in user_agent_info.get('string'):
-            browser = ''.join((user_agent_info['user_agent']['family'], '-', user_agent_info['user_agent']['major']))
+            browser = '-'.join((user_agent_info['user_agent']['family'], user_agent_info['user_agent']['major']))
         else:
             browser = user_agent_info.get('string')
 
         # 登陆成功后添加到在线用户表
-        models.OnlineUser.objects.update_or_create(
-            user_id=request.user.id,
-            is_deleted=False,
-            defaults={
-                'ip': request.META['REMOTE_ADDR'],
-                'token': request.user.cache_key,
-                'browser': browser,
-                'is_deleted': False,
-            }
-        )
-        return NewResponse(message='login success!', token=serializer.context['token'], result=serializer.validated_data)
+        try:
+            models.OnlineUser.objects.update_or_create(
+                user_id=self.request.user.id,
+                defaults={
+                    'ip': self.request.META['REMOTE_ADDR'],
+                    'token': self.request.user.cache_key,
+                    'browser': browser,
+                    'is_deleted': False,
+                }
+            )
+        except Exception as e:
+            ...
 
 
 class UserView(
@@ -49,7 +55,7 @@ class UserView(
     permission_classes = (IsAuthenticated, AdminPermission)
 
     serializer_class = UserSerializer
-    queryset = models.Users.objects.all()
+    queryset = models.Users.objects.filter(is_deleted=False).all()
 
 
 class PostView(
@@ -63,7 +69,7 @@ class PostView(
     authentication_classes = (NewJWTAuthentication, )
     permission_classes = (IsAuthenticated, AdminPermission)
     serializer_class = PostSerializer
-    queryset = models.Post.objects.all()
+    queryset = models.Post.objects.filter(is_deleted=False).all()
 
 
 class OnlineUserView(
@@ -75,4 +81,4 @@ class OnlineUserView(
     authentication_classes = (NewJWTAuthentication, )
     permission_classes = (IsAuthenticated, AdminPermission)
     serializer_class = OnlineSerializer
-    queryset = models.OnlineUser.objects.all()
+    queryset = models.OnlineUser.objects.filter(is_deleted=False).all()

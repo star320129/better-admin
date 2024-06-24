@@ -90,7 +90,6 @@ class LoginSerializer(serializers.Serializer, UserMixin):
         return {
             'id': user.id,
             'username': user.username,
-            'password': user.password,
             'avatar': ''.join((settings.SERVER_URL, settings.MEDIA_URL, str(user.avatar))),
             'is_active': user.is_active,
         }
