@@ -26,6 +26,7 @@ class PermissionView(
 
         res = super().list(request, *args, **kwargs)
         if res.data.get('result'):
+            # 处理目录列表
             res.data['result'] = self.custom_dir(res.data.get('result'))
         return res
 
@@ -70,6 +71,7 @@ class ButtonView(
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         if response.data.get('result'):
+            # 前端指令格式：{'name': 'path'}
             response.data['result'] = [{_['name']: _['path']} for _ in response.data['result']]
         return response
 
