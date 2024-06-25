@@ -19,7 +19,7 @@ def permissions_user(user):
     :return:
     """
     roles_pk = roles_user(user)
-    relation_queryset = p_models.RolePerms.objects.filter(role_id__in=roles_pk, is_deleted=False).delete()
+    relation_queryset = p_models.RolePerms.objects.filter(role_id__in=roles_pk, is_deleted=False).all()
 
     permission_obj = []
     for rel in relation_queryset:
