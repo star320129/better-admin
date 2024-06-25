@@ -14,7 +14,7 @@
                 <lay-button-container>
                     <lay-button v-permission='{"添加用户": "user:action:create"}' type="primary" >新增</lay-button>
                     <lay-button v-permission='{"编辑用户": "user:action:update"}'>修改</lay-button>
-                    <lay-button v-permission='{"删除用户": "user:action:delete"}'>删除</lay-button>
+                    <lay-button v-permission='{"删除用户": "user:action:destroy"}'>删除</lay-button>
                     <lay-button v-permission='{"用户导入": "user:import"}'>导入</lay-button>
                     <lay-button v-permission='{"用户导出": "user:export"}'>导出</lay-button>
                 </lay-button-container>
