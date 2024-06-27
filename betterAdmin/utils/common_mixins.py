@@ -16,7 +16,7 @@ class NewCreateMixin(mixins.CreateModelMixin):
 
     def create(self, request, *args, **kwargs):
         res = super(NewCreateMixin, self).create(request, *args, **kwargs)
-        return NewResponse(message="新增已完成!", result=res.data)
+        return NewResponse(message="新增已完成!")
 
 
 class NewRetrieveMixin(mixins.RetrieveModelMixin):
@@ -30,7 +30,7 @@ class NewUpdateMixin(mixins.UpdateModelMixin):
 
     def update(self, request, *args, **kwargs):
         res = super(NewUpdateMixin, self).update(request, *args, **kwargs)
-        return NewResponse(message="更新已完成!", result=res.data)
+        return NewResponse(message="更新已完成!")
 
 
 class NewDeleteMixin(mixins.DestroyModelMixin):

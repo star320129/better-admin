@@ -8,10 +8,10 @@ Websocket配置
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
 # BACKEND配置，使用redis
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/2'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_TASK_SERIALIZER = 'pickle'
 # 结果序列化方案
-CELERY_RESULT_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'pickle'
 # 任务结果过期时间，秒
 CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24
 # 时区配置
@@ -26,6 +26,12 @@ CELERY_TIMEZONE = 'Asia/Shanghai'
 #             'args': (),
 #         },
 # }
+
+# 启动celery：
+#     celery -A better worker -l debug -P eventlet
+
+# 启动beat：
+#     celery -A better beat -l debug
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
+from utils.common_exception import CreateException
 from .. import models
 import re
 from utils.common_function import token_cache_key
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
+from django.db import transaction
 
 
 class UserMixin:
@@ -14,7 +17,23 @@ class UserMixin:
         r'^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$',
     )
 
-    def _match_account(self, account):
+    @staticmethod
+    def _valid_list(valid: list):
+        """
+        检测前端传入的角色和职位列表格式是否正确
+        :param valid:
+        :return:
+        """
+        for val in valid:
+            if not isinstance(val, int):
+                raise serializers.ValidationError(f'{valid} format error!')
+
+    def _match_account(self, account: str):
+        """
+        检测账户名是否正确
+        :param account:
+        :return:
+        """
         if re.match(self.re_tuple[0], account):
             user = models.Users.objects.filter(phone=account).first()
         elif re.match(self.re_tuple[1], account):
@@ -24,6 +43,12 @@ class UserMixin:
         return user
 
     def check_user(self, account: str, password: str):
+        """
+        检测用户是否存在
+        :param account:
+        :param password:
+        :return:
+        """
         if not account or not password:
             raise serializers.ValidationError('account or password is None!')
 
@@ -40,7 +65,7 @@ class UserMixin:
         return user
 
     @staticmethod
-    def generate_token(user):
+    def generate_token(user: models.Users):
         """
         签发token, 并存储在redis中, cache.set()方法默认过期时间为300s！！！
         :param user:
@@ -52,7 +77,7 @@ class UserMixin:
         return token
 
     @staticmethod
-    def roles_or_posts(obj, default):
+    def roles_or_posts(obj, default: str):
         """
         获取用户角色和岗位信息
         :param obj: user object
@@ -123,9 +148,61 @@ class UserSerializer(serializers.ModelSerializer, UserMixin):
 
 class UserActionSerializer(serializers.ModelSerializer, UserMixin):
 
+    roles = serializers.ListField(write_only=True)
+    posts = serializers.ListField(write_only=True)
+
     class Meta:
         model = models.Users
-        fields = ('username', 'email', 'phone')
+        fields = ('username', 'email', 'gender', 'phone', 'roles', 'posts')
+
+        extra_kwargs = {
+            'username': {'write_only': True},
+            'email': {'write_only': True},
+            'gender': {'write_only': True},
+            'phone': {'write_only': True},
+        }
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        phone = attrs.get('phone')
+        posts = attrs.get('posts')
+        roles = attrs.get('roles')
+
+        # 检测邮箱、手机号
+        if not re.match(self.re_tuple[0], phone) or not re.match(self.re_tuple[1], email):
+            raise serializers.ValidationError('phone or email is wrong!')
+
+        # 检测用户是否存在
+        if models.Users.objects.filter(Q(email=email) | Q(phone=phone)).exists():
+            raise serializers.ValidationError('email or phone is exist!')
+
+        self._valid_list(posts)
+        self._valid_list(roles)
+        return attrs
+
+    def create(self, validated_data):
+        posts = validated_data.pop('posts')
+        roles = validated_data.pop('roles')
+        cache.add('default_password', '123456')
+
+        # 涉及多表操作，添加事务
+        with transaction.atomic():
+            try:
+                new_user = models.Users.objects.create(**validated_data)
+
+                new_user.set_password(cache.get('default_password'))
+                new_user.save()
+                if posts:
+                    user_posts = [models.UserPosts(user_id=new_user.pk, post_id=post_id) for post_id in posts]
+                    models.UserPosts.objects.bulk_create(user_posts)
+
+                if roles:
+                    user_roles = [models.UserRoles(user_id=new_user.pk, role_id=role_id) for role_id in roles]
+                    models.UserRoles.objects.bulk_create(user_roles)
+
+            except CreateException as ex:
+                ...
+        return new_user
 
 
 class OnlineSerializer(serializers.ModelSerializer):

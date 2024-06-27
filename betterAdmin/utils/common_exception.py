@@ -60,3 +60,11 @@ def new_exception_handler(exc, content):
         return NewResponse(message=drf_exception_handler.data.get('detail', "The system is busy now !"), status=drf_exception_handler.status_code)
 
     return None
+
+
+class CreateException(Exception):
+    pass
+
+
+class UpdateException(Exception):
+    pass
