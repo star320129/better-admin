@@ -60,7 +60,7 @@ class UserView(
     def get_queryset(self):
         user_queryset = cache.get('user_queryset')
         if not user_queryset:
-            cache.set('user_list', self.queryset, timeout=3600)
+            cache.set('user_queryset', self.queryset, timeout=3600)
         return user_queryset
 
     def get_serializer_class(self):

@@ -37,8 +37,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'daphne',
-    # 'channels',
+    'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'django_filters',
     'src.Users',
     'src.Perms',
-
+    'src.Wechat',
 ]
 
 MIDDLEWARE = [
@@ -113,23 +113,59 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'better.wsgi.application'
-
+ASGI_APPLICATION = "better.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# 单数据库
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'better',
+#         'USER': 'root',
+#         'PASSWORD': '123456',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'CHARSET': 'utf8mb4',
+#     },
+# }
+
+# 读写分离
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'better',
-        'USER': 'root',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'CHARSET': 'utf8mb4',
+     # 使用dj_db_conn_pool的mysql后端
+     'ENGINE': 'dj_db_conn_pool.backends.mysql',
+     'NAME': 'better',
+     'HOST': '60.204.238.150',
+     'PORT': 3306,
+     'PASSWORD': '123456',
+     'USER': 'root',
+     'CHARSET': 'utf8mb4',
+     # 连接池配置
+     'POOL_OPTIONS': {
+         'POOL_SIZE': 10,  # 连接池大小
+         'MAX_OVERFLOW': 2  # 最大溢出连接数
+        }
     },
+
+    'read': {
+        'ENGINE': 'dj_db_conn_pool.backends.mysql',
+        'NAME': 'better',
+        'HOST': '60.204.238.150',
+        'PORT': 3308,
+        'PASSWORD': '123456',
+        'USER': 'root',
+        'CHARSET': 'utf8mb4',
+        # 连接池配置
+        'POOL_OPTIONS': {
+            'POOL_SIZE': 10,  # 连接池大小
+            'MAX_OVERFLOW': 2  # 最大溢出连接数
+        }
+    }
 }
 
+DATABASE_ROUTERS = ['better.db_router.DBRouter']
 
 CACHES = {
     "default": {
