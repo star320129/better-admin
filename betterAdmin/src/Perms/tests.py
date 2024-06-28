@@ -101,9 +101,8 @@ def button():
         {'path': 'user:action:update', 'name': '编辑用户', 'elem': 3},
         {'path': 'user:action:delete', 'name': '删除用户', 'elem': 3},
         {'path': 'user:action:list', 'name': '用户列表', 'elem': 3},
-        {'path': 'user:action:create', 'name': '用户导入', 'elem': 3},
         {'path': 'user:export', 'name': '用户导出', 'elem': 3},
-        {'path': 'user:import', 'name': '用户导出', 'elem': 3},
+        {'path': 'user:import', 'name': '用户导入', 'elem': 3},
     ]
     obj_list = [models.Permission(**perm) for perm in perms_list]
 
@@ -115,11 +114,12 @@ def button():
 # role = models.Role.objects.create(name='测试一号')
 # print(role)
 
+
 @transaction.atomic
 def role_perms():
     perms_list = [10, 33, 45, 46, 47, 48, 49, 50]
 
-    obj_list = [models.RolePerms(role_id=2, perms_id=perm) for perm in perms_list]
+    obj_list = [models.RolePerms(role_id=1, perms_id=perm) for perm in perms_list]
     models.RolePerms.objects.bulk_create(obj_list)
 
 

@@ -324,6 +324,6 @@ res = [
 # a = custom_dir(res)
 # print(json.dumps(a, ensure_ascii=False))
 
-# UserRoles.objects.create(user_id=3, role_id=2)
+UserRoles.objects.create(user_id=2, role_id=1)
 
 
