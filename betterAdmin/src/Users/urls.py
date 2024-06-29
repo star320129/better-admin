@@ -5,6 +5,7 @@ from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
 router.register('anyUser', views.LoginView, 'anyUser')
 router.register('action', views.UserView, 'action')
+router.register('update_pas', views.UpdatePassView, 'update_pas')
 router.register('post', views.PostView, 'post')
 router.register('online', views.OnlineUserView, 'online')
 

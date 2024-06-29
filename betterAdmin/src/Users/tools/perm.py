@@ -10,7 +10,7 @@ class AdminPermission(BasePermission):
     permissions = None
 
     def has_permission(self, request, view):
-        if request.user.is_superuser:
+        if request.user.is_superuser or view.action == 'list':
             return True
 
         self.permissions = permissions_user(request.user)
@@ -22,5 +22,8 @@ class AdminPermission(BasePermission):
             return True
 
     def has_object_permission(self, request, view, obj):
+        if obj == request.user:
+            return True
+
         self.has_permission(request, view)
 

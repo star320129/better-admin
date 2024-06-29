@@ -1,9 +1,17 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.exceptions import StopConsumer
+import json
 
 
-class SSHConsumer(AsyncWebsocketConsumer):
+class RadioConsumer(AsyncWebsocketConsumer):
 
-    async def websocket_connect(self, message):
+    async def connect(self):
+
         await self.accept()
-        await self.channel_layer.group_add()
+
+    async def receive(self, text_data=None, bytes_data=None):
+        await self.send(text_data=text_data)
+
+    async def disconnect(self, code):
+        await self.close()
+

@@ -202,7 +202,36 @@ class UserActionSerializer(serializers.ModelSerializer, UserMixin):
 
             except CreateException as ex:
                 ...
+        self.context['email'] = new_user.email
         return new_user
+
+
+class UpdatePasSerializer(serializers.ModelSerializer):
+
+    old_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = models.Users
+        fields = ('old_password', 'new_password')
+
+    def validate(self, attrs):
+        old_password = attrs.get('old_password')
+        new_password = attrs.get('new_password')
+        if any((
+            old_password == new_password,
+            new_password == '123456'
+        )):
+            raise serializers.ValidationError('password format is wrong!')
+
+        return attrs
+
+    def update(self, instance, validated_data):
+        new_password = validated_data.pop('new_password')
+        instance.set_password(new_password)
+        instance.save()
+        self.context['email'] = instance.email
+        return instance
 
 
 class OnlineSerializer(serializers.ModelSerializer):

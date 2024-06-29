@@ -99,7 +99,7 @@ def button():
     perms_list = [
         {'path': 'user:action:create', 'name': '添加用户', 'elem': 3},
         {'path': 'user:action:update', 'name': '编辑用户', 'elem': 3},
-        {'path': 'user:action:delete', 'name': '删除用户', 'elem': 3},
+        {'path': 'user:action:destroy', 'name': '删除用户', 'elem': 3},
         {'path': 'user:action:list', 'name': '用户列表', 'elem': 3},
         {'path': 'user:export', 'name': '用户导出', 'elem': 3},
         {'path': 'user:import', 'name': '用户导入', 'elem': 3},

@@ -17,3 +17,4 @@ PyMySQL==1.1.1
 mysqlclient==2.2.4
 ua-parser==0.18.0
 django-db-connection-pool==1.2.5
+sentry-sdk==2.7.1

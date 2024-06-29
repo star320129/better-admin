@@ -1,11 +1,13 @@
 from utils import NewResponse
 from utils.common_jwt_authentication import NewJWTAuthentication
 from utils.common_mixins import *
+from utils.common_function import token_cache_key
 from . import models
 from . import tasks
 from ua_parser import user_agent_parser
 from .tools.seriaizer import PostSerializer
-from .tools import LoginSerializer, UserSerializer, AdminPermission, OnlineSerializer, UserActionSerializer
+from .tools import (LoginSerializer, UserSerializer, AdminPermission,
+                    OnlineSerializer, UserActionSerializer, UserFilter, UpdatePasSerializer)
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -56,6 +58,7 @@ class UserView(
     permission_classes = (IsAuthenticated, AdminPermission)
 
     queryset = models.Users.objects.filter(is_deleted=False).all()
+    filter_backends = (UserFilter,)
 
     def get_queryset(self):
         user_queryset = cache.get('user_queryset')
@@ -76,6 +79,23 @@ class UserView(
         tasks.update_user_queryset.delay()
 
         # 通知用户
+        tasks.send_email.delay('欢迎加入汪汪立功队！您的初始密码为123456，请尽快登录并修改密码!', serializer.context['email'])
+
+
+class UpdatePassView(GenericViewSet, NewUpdateMixin):
+    authentication_classes = (NewJWTAuthentication, )
+    permission_classes = (IsAuthenticated, AdminPermission)
+    queryset = models.Users.objects.filter(is_deleted=False).all()
+    serializer_class = UpdatePasSerializer
+
+    def perform_update(self, serializer):
+        serializer.save()
+        cache.delete(
+            token_cache_key(
+                models.OnlineUser.objects.filter(is_deleted=False, user=self.request.user).first().token
+            )
+        )
+        tasks.send_email.delay('您的密码修改成功, 请重新登录!', serializer.context['email'])
 
 
 class PostView(
