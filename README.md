@@ -4,5 +4,4 @@
 
 # System Architecture
 
-![BS前后端分离](https://github.com/star320129/better-admin/assets/81398376/cfacc6ac-eb82-46c7-811c-d2a45303fccf)
-
+![BS前后端分离](https://github.com/star320129/better-admin/assets/81398376/5c312738-4a48-40ed-ab3b-c79cdffeb41c)
